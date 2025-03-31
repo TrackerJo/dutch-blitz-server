@@ -3,6 +3,7 @@ const http = require('http').createServer(server);
 const io = require('socket.io')(http, {
     cors: {
         origin: "https://trackerjo.github.io",
+        // origin: "http://localhost:8080",
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -18,12 +19,14 @@ io.on('connection', function (socket) {
         io.emit('isPlayerA');
     };
 
+    io.emit('connectUser', socket.id);
+
     socket.on('dealCards', function () {
         io.emit('dealCards');
     });
 
-    socket.on('cardPlayed', function (gameObject, isPlayerA) {
-        io.emit('cardPlayed', gameObject, isPlayerA);
+    socket.on('cardPlayed', function (cardObj, userId, zoneObj) {
+        io.emit('cardPlayed', cardObj, userId,zoneObj);
     });
 
     socket.on('disconnect', function () {
